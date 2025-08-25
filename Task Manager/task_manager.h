@@ -25,6 +25,11 @@ public:
 	void editTaskPriority(const int id, Task::Priority newPriority);
 	void editTaskStatus(const int id, Task::Status newStatus);
 
+	void sortByName();
+	void sortByDueDate();
+	void sortByPriority();
+	void sortByStatus();
+
 	void printList()const;
 	void printTask(const int id);
 	bool isEmpty()const;

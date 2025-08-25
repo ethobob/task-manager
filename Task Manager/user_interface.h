@@ -27,6 +27,7 @@ public:
 	void userAddTask();
 	void userRemoveTask();
 	void userEditTask();
+	void userSortTasks();
 	void userShowTasks()const;
 
 };

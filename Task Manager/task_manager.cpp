@@ -62,6 +62,36 @@ void TaskManager::editTaskStatus(const int id, Task::Status newStatus)
 	save();
 }
 
+void TaskManager::sortByName()
+{
+	std::sort(m_taskList.begin(), m_taskList.end(), [](Task t1, Task t2)
+		{
+			return t1.getTitle().compare(t2.getTitle()) == -1 ? true : false;
+		});
+	save();
+}
+
+void TaskManager::sortByDueDate()
+{
+
+}
+
+void TaskManager::sortByPriority()
+{
+	std::sort(m_taskList.begin(), m_taskList.end(), [](Task t1, Task t2)
+		{
+			return t1.getPriority() > t2.getPriority();
+		});
+}
+
+void TaskManager::sortByStatus()
+{
+	std::sort(m_taskList.begin(), m_taskList.end(), [](Task t1, Task t2)
+		{
+			return t1.getStatus() < t2.getStatus();
+		});
+}
+
 void TaskManager::printList()const
 {
 	fmt::print(fg(COLOR_BLUE) | fmt::emphasis::bold | fmt::emphasis::underline, "\n\tTask List\n\n");

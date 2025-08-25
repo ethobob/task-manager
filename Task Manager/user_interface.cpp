@@ -17,12 +17,13 @@ UserInterface::UserInterface()
 void UserInterface::displayOptions()const
 {
 	fmt::print(fg(COLOR_BLUE) | fmt::emphasis::bold,
-		"Choose one of the following...\n{0}{1}{2}{3}{4}",
+		"Choose one of the following...\n{0}{1}{2}{3}{4}{5}",
 		"\n1. Add Task",
 		"\n2. Remove Task",
 		"\n3. Edit Task",
-		"\n4. Show Tasks",
-		"\n5. Save and Exit\n\n");
+		"\n4. Sort Tasks",
+		"\n5. Show Tasks",
+		"\n6. Save and Exit\n\n");
 }
 
 int UserInterface::getUserId()const
@@ -157,9 +158,12 @@ void UserInterface::init()
 			userEditTask();
 			break;
 		case 4:
-			userShowTasks();
+			userSortTasks();
 			break;
 		case 5:
+			userShowTasks();
+			break;
+		case 6:
 			m_manager.save();
 			return;
 		default:
@@ -253,6 +257,48 @@ void UserInterface::userEditTask()
 		}
 	}
 
+}
+
+void UserInterface::userSortTasks()
+{
+	clearScreen();
+	fmt::print(fg(COLOR_BLUE) | fmt::emphasis::bold,
+		"How would you like to sort your tasks?\n{0}{1}{2}{3}{4}",
+		"Choose one of the following...\n\n",
+		"1. Name",
+		"\n2. Due Date",
+		"\n3. Priority",
+		"\n4. Status\n\n");
+
+	while (true)
+	{
+		std::string choice;
+		std::getline(std::cin, choice);
+		int choiceAsNum = isNumber(choice) ? std::stoi(choice) : -1;
+
+		switch (choiceAsNum)
+		{
+		case 1:
+			m_manager.sortByName();
+			clearScreen();
+			return;
+		case 2:
+			m_manager.sortByDueDate();
+			clearScreen();
+			return;
+		case 3:
+			m_manager.sortByPriority();
+			clearScreen();
+			return;
+		case 4:
+			m_manager.sortByStatus();
+			clearScreen();
+			return;
+		default:
+			fmt::print(fg(COLOR_INVALID_RED) | fmt::emphasis::bold, "Invalid input\n");
+			break;
+		}
+	}
 }
 
 void UserInterface::userShowTasks()const

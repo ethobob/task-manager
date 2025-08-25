@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="date.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="task.cpp" />
     <ClCompile Include="task_manager.cpp" />
@@ -139,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="colors.h" />
+    <ClInclude Include="date.h" />
     <ClInclude Include="task.h" />
     <ClInclude Include="task_manager.h" />
     <ClInclude Include="user_interface.h" />
