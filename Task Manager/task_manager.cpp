@@ -41,7 +41,7 @@ void TaskManager::editTaskName(const int id, std::string newName)
 	save();
 }
 
-void TaskManager::editTaskDueDate(const int id, std::string newDueDate)
+void TaskManager::editTaskDueDate(const int id, Date newDueDate)
 {
 	Task& task = getTaskById(id);
 	task.setDueDate(newDueDate);
@@ -73,7 +73,11 @@ void TaskManager::sortByName()
 
 void TaskManager::sortByDueDate()
 {
-
+	std::sort(m_taskList.begin(), m_taskList.end(), [](Task t1, Task t2)
+		{
+			return t1.getDueDate() < t2.getDueDate();
+		});
+	save();
 }
 
 void TaskManager::sortByPriority()
@@ -94,7 +98,9 @@ void TaskManager::sortByStatus()
 
 void TaskManager::printList()const
 {
-	fmt::print(fg(COLOR_BLUE) | fmt::emphasis::bold | fmt::emphasis::underline, "\n\tTask List\n\n");
+	fmt::print("\n\t");
+	fmt::print(fg(COLOR_BLUE) | fmt::emphasis::bold | fmt::emphasis::underline, "Task List");
+	fmt::print("\n\n");
 
 	if (m_taskList.empty())
 	{
@@ -143,7 +149,7 @@ void TaskManager::save()const
 		json taskAsJson =
 		{
 			{"title", task.getTitle()},
-			{"dueDate", task.getDueDate()},
+			{"dueDate", task.getDueDateString()},
 			{"priority", task.getPriority()},
 			{"status", task.getStatus()}
 		};
@@ -158,11 +164,16 @@ void TaskManager::load()
 	std::ifstream tasks("tasks.json");
 	json tasksAsJson = json::array();
 	tasks >> tasksAsJson;
+
 	for (int i = 0; i < tasksAsJson.size(); i++)
 	{
 		json taskAsJson = tasksAsJson.at(i);
 		std::string title = taskAsJson.at("title");
-		std::string dueDate = taskAsJson.at("dueDate");
+		
+		// parsing the date string from json into integers to make a Date object
+		const std::string dueDateAsString = taskAsJson.at("dueDate");
+		Date dueDate(dueDateAsString);
+		
 		Task::Priority priority = taskAsJson.at("priority") == 1 ? Task::LOW : taskAsJson.at("priority") == 2 ? Task::MEDIUM : Task::HIGH;
 		Task::Status status = taskAsJson.at("status") == 1 ? Task::INCOMPLETE : Task::COMPLETE;
 		Task task(title, dueDate, priority, status);

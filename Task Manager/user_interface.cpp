@@ -1,13 +1,11 @@
 #include "user_interface.h"
 
-const std::regex UserInterface::m_dateRegex("^(0[1-9]|1[1-2])/([0-2][1-9]|3[0-1])/[0-9]{4}");
-
 // -------------------
 //    Constructors
 // -------------------
 
-UserInterface::UserInterface()
-	: m_manager(TaskManager())
+UserInterface::UserInterface(TaskManager& manager)
+	: m_manager(manager)
 { }
 
 // -------------------
@@ -53,22 +51,23 @@ std::string UserInterface::getUserName()const
 		fmt::print(fg(COLOR_BLUE) | fmt::emphasis::bold, "\nEnter the name of the task: ");
 		std::getline(std::cin, name);
 		if (name.empty())
-			fmt::print(fg(COLOR_INVALID_RED) | fmt::emphasis::bold, "Name cannot be empty");
+			fmt::print(fg(COLOR_INVALID_RED) | fmt::emphasis::bold, "Name cannot be empty\n");
 	}
 	return name;
 }
 
-std::string UserInterface::getUserDueDate()const
+Date UserInterface::getUserDueDate()const
 {
-	std::string dueDate;
-	while (!std::regex_match(dueDate, m_dateRegex))
+	std::string dueDateAsString;
+	while (!std::regex_match(dueDateAsString, Date::DATE_REGEX))
 	{
 		fmt::print(fg(COLOR_BLUE) | fmt::emphasis::bold, "\nEnter the due date for the task (MM/DD/YYYY): ");
-		std::getline(std::cin, dueDate);
-		if (!std::regex_match(dueDate, m_dateRegex))
-			fmt::print(fg(COLOR_INVALID_RED) | fmt::emphasis::bold, "Invalid date format\n\n");
+		std::getline(std::cin, dueDateAsString);
+		if (!std::regex_match(dueDateAsString, Date::DATE_REGEX))
+			fmt::print(fg(COLOR_INVALID_RED) | fmt::emphasis::bold, "Invalid date format\n");
 	}
-	return dueDate;
+
+	return Date(dueDateAsString);
 }
 
 
@@ -82,21 +81,12 @@ const Task::Priority UserInterface::getUserPriority()const
 		std::getline(std::cin, priorityAsString);
 		int priorityAsNum = (isNumber(priorityAsString) && priorityAsString.size() == 1) ? (priorityAsString[0] - '0') : -1;
 
-		switch (priorityAsNum)
-		{
-		case 1:
-			priority = Task::LOW;
-			break;
-		case 2:
-			priority = Task::MEDIUM;
-			break;
-		case 3:
-			priority = Task::HIGH;
-			break;
-		default:
-			fmt::print(fg(COLOR_INVALID_RED) | fmt::emphasis::bold, "Invalid input");
-			break;;
-		}
+		priority = priorityAsNum == 1 ? Task::LOW :
+				   priorityAsNum == 2 ? Task::MEDIUM :
+				   priorityAsNum == 3 ? Task::HIGH : Task::PRIORITY_UNKNOWN;
+		
+		if (priority == Task::PRIORITY_UNKNOWN)
+			fmt::print(fg(COLOR_INVALID_RED) | fmt::emphasis::bold, "Invalid input\n");
 
 	}
 	return priority;
@@ -112,18 +102,11 @@ const Task::Status UserInterface::getUserStatus()const
 		std::getline(std::cin, statusAsString);
 		int statusAsNum = (isNumber(statusAsString) && statusAsString.size() == 1) ? (statusAsString[0] - '0') : -1;
 
-		switch (statusAsNum)
-		{
-		case 1:
-			status = Task::INCOMPLETE;
-			break;
-		case 2:
-			status = Task::COMPLETE;
-			break;
-		default:
-			fmt::print(fg(COLOR_INVALID_RED) | fmt::emphasis::bold, "Invalid input");
-			break;
-		}
+		status = statusAsNum == 1 ? Task::INCOMPLETE :
+				 statusAsNum == 2 ? Task::COMPLETE : Task::STATUS_UNKNOWN;
+
+		if (status == Task::STATUS_UNKNOWN)
+			fmt::print(fg(COLOR_INVALID_RED) | fmt::emphasis::bold, "Invalid input\n");
 
 	}
 	return status;
@@ -135,7 +118,6 @@ const Task::Status UserInterface::getUserStatus()const
 
 void UserInterface::init()
 {
-	m_manager.load();
 	fmt::print(fg(COLOR_BLUE) | fmt::emphasis::bold | fmt::emphasis::underline, "Welcome to the Task Manager!\n\n");
 
 	while (true)
@@ -180,7 +162,7 @@ void UserInterface::userAddTask()
 	clearScreen();
 
 	std::string name = getUserName();
-	std::string dueDate = getUserDueDate();
+	Date dueDate = getUserDueDate();
 	Task::Priority priority = getUserPriority();
 	Task::Status status = getUserStatus();
 
@@ -225,7 +207,7 @@ void UserInterface::userEditTask()
 		int choiceAsNum = isNumber(choice) ? std::stoi(choice) : -1;
 
 		std::string name;
-		std::string dueDate;
+		Date dueDate;
 		Task::Priority priority;
 		Task::Status status;
 

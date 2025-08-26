@@ -21,7 +21,7 @@ public:
 	void removeTask(const int id);
 
 	void editTaskName(const int id, std::string newName);
-	void editTaskDueDate(const int id, std::string newDueDate);
+	void editTaskDueDate(const int id, Date newDueDate);
 	void editTaskPriority(const int id, Task::Priority newPriority);
 	void editTaskStatus(const int id, Task::Status newStatus);
 

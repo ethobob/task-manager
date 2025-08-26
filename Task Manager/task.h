@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <string>
+#include "date.h"
 
 class Task
 {
@@ -18,7 +19,7 @@ public:
 private:
 	int m_id;
 	std::string m_title;
-	std::string m_dueDate;
+	Date m_dueDate;
 	Priority m_priority;
 	Status m_status;
 
@@ -31,19 +32,21 @@ public:
 
 	// constructors
 	Task();
-	Task(const std::string& title, const std::string& dueDate, Priority priority, Status status);
+	Task(const std::string title);
+	Task(const std::string& title, const Date& dueDate, Priority priority, Status status);
 
 	// getters
 	int getID()const;
 	const std::string& getTitle()const;
-	const std::string& getDueDate()const;
+	const Date& getDueDate()const;
+	std::string getDueDateString()const;
 	Priority getPriority()const;
 	Status getStatus()const;
 
 	// setters
 	void setID(int id);
 	void setTitle(const std::string& title);
-	void setDueDate(const std::string& dueDate);
+	void setDueDate(const Date& dueDate);
 	void setPriority(Priority priority);
 	void setStatus(Status status);
 

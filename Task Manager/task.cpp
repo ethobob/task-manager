@@ -7,10 +7,14 @@ int Task::nextID = 100;
 // -------------------
 
 Task::Task()
-	: m_id(nextID++), m_title("Unknown"), m_dueDate("Unknown"), m_priority(LOW), m_status(INCOMPLETE)
+	: m_id(nextID++), m_title("Unknown"), m_dueDate(Date()), m_priority(LOW), m_status(INCOMPLETE)
 { }
 
-Task::Task(const std::string& title, const std::string& dueDate, Priority priority, Status status)
+Task::Task(const std::string title)
+	: m_id(nextID++), m_title(title), m_dueDate(Date()), m_priority(LOW), m_status(INCOMPLETE)
+{ }
+
+Task::Task(const std::string& title, const Date& dueDate, Priority priority, Status status)
 	: m_id(nextID++), m_title(title), m_dueDate(dueDate), m_priority(priority), m_status(status)
 { }
 
@@ -28,9 +32,14 @@ const std::string& Task::getTitle()const
 	return m_title;
 }
 
-const std::string& Task::getDueDate()const
+const Date& Task::getDueDate()const
 {
 	return m_dueDate;
+}
+
+std::string Task::getDueDateString()const
+{
+	return m_dueDate.toString();
 }
 
 Task::Priority Task::getPriority()const
@@ -58,7 +67,7 @@ void Task::setTitle(const std::string& title)
 	m_title = title;
 }
 
-void Task::setDueDate(const std::string& dueDate)
+void Task::setDueDate(const Date& dueDate)
 {
 	m_dueDate = dueDate;
 }
@@ -104,7 +113,7 @@ void Task::printTask()const
 		"----------------------{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}",
 		"\nID: ", m_id,
 		"\nTask: ", m_title,
-		"\nDue: ", m_dueDate,
+		"\nDue: ", m_dueDate.toString(),
 		"\nPriority: ", priorityAsString(m_priority),
 		"\nStatus: ", statusAsString(m_status),
 		"\n----------------------");
