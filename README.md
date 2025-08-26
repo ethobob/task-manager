@@ -18,7 +18,7 @@ Choose one of the following...
 5. Show Tasks
 6. Save and Exit
 
-You can also use the advanced command-based interface. You can see a list of all commands by typing "todo help"
+You can also use the advanced command-based interface. You can see a list of all commands by typing "todo help":
 
 "todo clear" - clears the screen
 "todo add (name)" - adds a task to the list
