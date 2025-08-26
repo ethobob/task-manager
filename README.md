@@ -21,9 +21,10 @@ Choose one of the following...
 You can also use the advanced command-based interface. You can see a list of all commands by typing "todo help":
 
 "todo clear" - clears the screen
-"todo add (name)" - adds a task to the list
+\n"todo add (name)" - adds a task to the list
 "todo remove (id)" - removes a task from the list
 "todo edit (id) (characteristic) (new value)" - changes a value from a task
 "todo sort (characteristic)" - sorts tasks by characteristic
 "todo list" - lists all tasks
 "todo exit" - exits the program
+
